@@ -12,7 +12,7 @@ default_values = {
     'client_column3': 'default_value',  # This column will be filled with 'default_value' if it's not in the source
 }
 
-def client():
+def Client():
     # Initialize migration for the Client table
     client_migration = Migrate('investor', 'client', column_mapping, default_values)
     client_migration.migrate()
