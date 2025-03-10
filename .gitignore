@@ -3,3 +3,6 @@ app/.env
 # Ignore __pycache__ directories and .pyc files
 __pycache__/
 *.pyc
+# Ignore all except data/static
+data/*
+!data/static

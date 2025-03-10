@@ -1,18 +1,40 @@
 version: '3.3'
 
 services:
-  database_migration:
+  app:
     build:
       context: .
-      dockerfile: docker/Dockerfile
-    container_name: database_migration
+      dockerfile: docker/app_dockerfile
+    container_name: migration-app
     restart: unless-stopped
     tty: true
     working_dir: /app
     volumes:
       - ./app:/app
     ports:
-      - 6806:6789
+      - 6801:5000
+ 
+  db:
+      container_name: 'migration-db'
+      image: mysql:8.0.29
+      restart: unless-stopped
+      tty: true
+      command:
+          - "--default-authentication-plugin=mysql_native_password"
+          - "--innodb-buffer-pool-size=1G"
+          - "--innodb-buffer-pool-instances=2"
+      environment:
+          MYSQL_DATABASE: db_migration
+          MYSQL_ROOT_PASSWORD: root
+          SERVICE_TAGS: dev
+          SERVICE_NAME: mysql
+          TZ: 'Asia/Dhaka'
+      volumes:
+          - ./data/mysql:/var/lib/mysql
+          - ./data/temp:/dumbs
+          - ./docker/mysql.cnf:/etc/mysql/my.cnf
+      ports:
+          - "6802:3306"
 
 volumes:
   dbdata:

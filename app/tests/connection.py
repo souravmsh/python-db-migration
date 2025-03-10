@@ -4,6 +4,7 @@ from database.mssql import connection_mssql
 def test_mysql_connection():
     print('MySQL connection testing...')
     connection = connection_mysql()
+    print(connection)
     if connection:
         print("connected...")
         print(connection)
