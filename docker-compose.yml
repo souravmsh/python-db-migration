@@ -1,0 +1,19 @@
+version: '3.3'
+
+services:
+  database_migration:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    container_name: database_migration
+    restart: unless-stopped
+    tty: true
+    working_dir: /app
+    volumes:
+      - ./app:/app
+    ports:
+      - 6806:6789
+
+volumes:
+  dbdata:
+    driver: local
