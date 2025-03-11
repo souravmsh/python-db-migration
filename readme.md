@@ -55,23 +55,25 @@ This will open a shell session inside the container.
 ## **5. Script Directory Structure**
 ```
 app/
-│── config/
-│   ├── database.py
-│── database/
-│   ├── mysql.py
-│   ├── mssql.py
+│── logs/
+│   ├── 2025-10-03.log
+│   ├── .....
 │── migrations/
-│   ├── migrate.py
-│   ├── tables/  
-│   │   ├── client.py
-│   │   ├── orders.py
-│   │   ├── ....
+│   ├── client.py
+│   ├── orders.py
+│   ├── subscriber.py
+│   ├── .....
 │── tests/
 │   ├── connection.py
+│── utils/
+│   ├── config.py
+│   ├── log.py
+│   ├── migrate.py
+│   ├── mysql.py
+│   ├── mssql.py
 │── main.py
-│── test.py
-```
----
+│── test.py 
+
 
 ## **6. Migration Table Information**
 Migration table scripts are located inside the `migrations/tables/` directory. Each Python file inside this directory represents a specific table migration.
