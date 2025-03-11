@@ -1,5 +1,3 @@
-import time
-import datetime
 import traceback
 from migrations.subscription import Subscription
 from migrations.bank import Bank
