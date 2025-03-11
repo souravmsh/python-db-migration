@@ -1,4 +1,4 @@
-# Migrating an MSSQL Database to MySQL with Python and Docker
+# Migrating Between MSSQL and MySQL Databases Using Python and Docker
 
 This guide provides step-by-step instructions to set up and run the database migration project using Docker.
 
@@ -39,14 +39,14 @@ Check if the container is running successfully:
 ```sh
 docker ps
 ```
-You should see a running container named **database_migration**.
+You should see a running container named **migration-app**.
 
 ---
 
 ## **4. Access the Running Container**
 To enter the running container and interact with the environment:
 ```sh
-docker exec -it database_migration sh
+docker exec -it migration-app sh
 ```
 This will open a shell session inside the container.
 
@@ -104,15 +104,24 @@ if __name__ == "__main__":
 ---
 
 ## **7. Run the Migration Script**
-Once inside the container, navigate to the `/app` directory and run your migration script:
+Once inside the container, navigate to the root directory and run your migration script:
 ```sh
-python app/main.py
+python main.py
+```
+or
+```sh
+python migrations/client.py
 ```
 This will execute the database migration process.
 
 To execute a specific table migration:
 ```sh
-docker exec -it database_migration python /app/main.py
+docker exec -it migration-app python migrations/client.py
+```
+or
+```sh
+docker exec -it migration-app sh
+python migrations/client.py
 ```
 
 ---
@@ -137,7 +146,7 @@ docker-compose logs
 ```
 or
 ```sh
-docker logs database_migration
+docker logs migration-app
 ```
 
 ### **Verify ODBC Installation**
@@ -166,7 +175,11 @@ docker-compose up -d
 ## **Sample Command to Run `app/main.py`**
 To execute the migration script directly in one command:
 ```sh
-docker exec -it database_migration python /app/main.py
+docker exec -it migration-app python main.py
+```
+or run specific table:-
+```sh
+docker exec -it migration-app python migrations/subscription.py
 ```
 
 ---
