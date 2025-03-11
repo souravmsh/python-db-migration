@@ -1,4 +1,3 @@
-from utils.migrate import Migrate
 from utils.migrator import Migrator
 from datetime import datetime
 
@@ -30,9 +29,8 @@ def prepare_data(row):
 def Bank(): 
     # Initialize the migration service
     migrator = Migrator()
-
     # Truncate the destination table before inserting new data
-    migrator.truncate(destination_table)  # Truncate destination table
+    migrator.truncate(destination_table)
     
     # Print chunk size and table information
     print(f"✅ Query Chunk Size: {query_chunk_size}")

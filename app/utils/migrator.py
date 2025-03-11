@@ -3,7 +3,7 @@ from utils.mssql import mssql_connect
 from utils.config import config
 from utils.log   import log
 
-class MigrationService:
+class Migrator:
 
     # Initialize
     def __init__(self, source_table, destination_table, column_mapping, extra_columns=None, query_chunk_size=None):
