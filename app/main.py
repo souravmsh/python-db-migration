@@ -1,5 +1,5 @@
 import time
-from tables.subscription import Subscription
+from migrations.subscription import Subscription
 from utils.log import log
 
 

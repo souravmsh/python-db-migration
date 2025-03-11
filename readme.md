@@ -76,24 +76,29 @@ app/
 
 
 ## **6. Migration Table Information**
-Migration table scripts are located inside the `migrations/tables/` directory. Each Python file inside this directory represents a specific table migration.
+Migration table scripts are located inside the `migrations/` directory. Each Python file inside this directory represents a specific table migration.
 
 To run a single migration file inside `main.py`, use the following format:
 
 ### **Example: Running the `Client` Migration**
 ```python
 import time
-from migrations.migrate import Migrate
-from migrations.tables.client import Client
+from migrations.subscription import Subscription
+from utils.log import log
 
 def main():
-    print("Starting data migration process")
-    time.sleep(1000)
-    # Run migration for the Client table
-    Migrate(Client)
+    log.info(f"🚀 Migration process started...")
+    # time.sleep(1000)
+
+    try:
+        Subscription()
+    except Exception as e:
+        log.error(f"❌ An error occurred: {e}")
 
 if __name__ == "__main__":
     main()
+
+
 ```
 
 ---
