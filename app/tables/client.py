@@ -1,6 +1,7 @@
-from migrations.migrate import Migrate
+from app.migrations.process import Migrate
 
-# Define the column mapping for the Client table
+# Define the column mapping for the Source table
+# Source Columns = Target Columns
 column_mapping = {
     'investor_column1': 'client_column1',
     'investor_column2': 'client_column2',

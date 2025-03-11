@@ -1,6 +1,6 @@
 # migrations/tables/Bank.py
 
-from migrations.migrate import Migrate
+from app.migrations.process import Migrate
 
 # Define the column mapping for the Bank table migration
 column_mapping = {

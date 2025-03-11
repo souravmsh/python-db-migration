@@ -1,23 +1,23 @@
-from database.mysql import connection_mysql
-from database.mssql import connection_mssql
+from utils.mysql import mysql_connect
+from utils.mssql import mssql_connect
 
-def test_mysql_connection():
+def test_mysql():
     print('MySQL connection testing...')
-    connection = connection_mysql()
-    print(connection)
-    if connection:
+    conn = mysql_connect()
+    print(conn)
+    if conn:
         print("connected...")
-        print(connection)
-        connection.close()  # Make sure to close the connection after use.
+        print(conn)
+        conn.close()  # Make sure to close the connection after use.
     else:
         print("Failed MSSQL connection.")
     
-def test_mssql_connection():
+def test_mssql():
     print('MSSQL connection testing...')
-    connection = connection_mssql()
-    if connection:
+    conn = mssql_connect()
+    if conn:
         print("connected...")
-        print(connection)
-        connection.close()  # Make sure to close the connection after use.
+        print(conn)
+        conn.close()  # Make sure to close the connection after use.
     else:
         print("Failed MSSQL connection.")
