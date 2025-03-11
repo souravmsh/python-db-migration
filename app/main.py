@@ -8,8 +8,8 @@ from utils.benchmark import benchmark
 
 def main():
     benchmark_start = benchmark.start(1)
-    log.info(f"🚀 Migration process initiated at {benchmark_start}.")
-    print(f"🚀 Migration process initiated at {benchmark_start}.")
+    log.info(f"🚀 Migration process initiated, {benchmark_start}.")
+    print(f"🚀 Migration process initiated, {benchmark_start}.")
 
     try:
         # Begin the migration process
