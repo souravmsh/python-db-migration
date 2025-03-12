@@ -10,7 +10,7 @@ destination_table = 'subscriptions'
 def prepare_data(row):
     return {
         # 'id': row['MerchantBankerID'],
-        'client_code': 'XYZ' + row['Investor_Code'],
+        'client_code': str(row['Investor_Code'])[3:],
         'email': row['e-mail'],
         'status': 'Active',
         'updated_by': row['approved_by'],

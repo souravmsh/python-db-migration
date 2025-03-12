@@ -113,12 +113,12 @@ class Migrator:
 
             log.info(f"✅ Initialized connection: {config.source_database} → {config.destination_database}, {self.source_table} → {self.destination_table}.")
             print(f"✅ Initialized connection: {config.source_database} → {config.destination_database}, {self.source_table} → {self.destination_table}.")
-
-            
             print(f"✅ Query Chunk Size: {chunk_size}")
             print(f"✅ Running source query: {source_query}")
             
-            total_rows = self.count_rows(source_query)
+            # count total rows from source_query
+            self.count_rows(source_query)
+
             offset  = sl = 0
             self.total_fetched = 0
             self.total_inserted = 0
