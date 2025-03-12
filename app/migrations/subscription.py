@@ -1,24 +1,36 @@
-from utils.migrate import Migrate
+from utils.migrator import Migrator
 from datetime import datetime
 
-source_table = 'Temp_Email'
-destination_table = 'subscriptions'
 query_chunk_size = 100
+source_table = "Temp_Email"
+source_query = f"SELECT * FROM {source_table}"
+destination_table = 'subscriptions'
 
-column_mapping = {
-    'Investor_Code': 'client_code',
-    'e-mail': 'email',
-    # 'approved_by': 'updated_by',
-    'approved_dt': 'created_at',
-}
+# Modify the row for migration
+def prepare_data(row):
+    return {
+        # 'id': row['MerchantBankerID'],
+        'client_code': 'XYZ' + row['Investor_Code'],
+        'email': row['e-mail'],
+        'status': 'Active',
+        'updated_by': row['approved_by'],
+        'created_at': row['approved_dt'],
+        'updated_at': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+    }
 
-extra_columns = {
-    'status': 'Active',
-    'updated_by': 1,
-    'updated_at': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-}
+def subscription(): 
+    # Initialize the migration service
+    migrator = Migrator()
+    # Truncate the destination table before inserting new data
+    migrator.truncate(destination_table)
+    # Perform the migration in chunks
+    migrator.migrate(
+        source_table, 
+        source_query, 
+        destination_table, 
+        prepare_data,  # Pass the prepare_data function (closure method)
+        query_chunk_size
+    )
 
-def Subscription(): 
-    process = Migrate(source_table, destination_table, column_mapping, extra_columns, query_chunk_size)
-    process.migrate()
-    process.close_connections()
+if __name__ == "__main__":
+    subscription()

@@ -1,11 +1,12 @@
-# Ignore environment files
+# ignore environment files
 app/.env
-# Ignore __pycache__ directories and .pyc files
+# ignore __pycache__ directories and .pyc files
 __pycache__/
 *.pyc
-# Ignore all except data/static
-data/
-data/mysql
-data/temp
-!data/static
-logs/
+# data directory
+data/*
+!data/odbc/
+!data/samples/
+# logs
+logs/*
+!logs/index.html
