@@ -11,6 +11,7 @@ services:
     working_dir: /app
     volumes:
       - ./app:/app
+      - ./data/samples/:/data
     ports:
       - 6801:5000
  

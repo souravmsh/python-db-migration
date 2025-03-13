@@ -2,20 +2,20 @@ from utils.migrator import Migrator
 from datetime import datetime
 
 query_chunk_size = 100
-source_table = "Temp_Email"
+source_table = 'subscriptions'
 source_query = f"SELECT * FROM {source_table}"
-destination_table = 'subscriptions'
+destination_table = "subscriptions_temp"
 
 # Modify the row for migration
 def prepare_data(row):
     return {
-        # 'id': row['MerchantBankerID'],
-        'client_code': str(row['Investor_Code'])[3:],
-        'email': row['e-mail'],
-        'status': 'Active',
-        'updated_by': row['approved_by'],
-        'created_at': row['approved_dt'],
-        'updated_at': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+        'id': row['id'],
+        'client_code': row['client_code'],
+        'email': row['email'],
+        'status': row['status'],
+        'updated_by': row['updated_by'],
+        'created_at': row['created_at'],
+        'updated_at': row['updated_at']
     }
 
 def subscription(): 
