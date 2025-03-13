@@ -1,15 +1,16 @@
 import traceback
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import ThreadPoolExecutor
 from utils.log import log
 from utils.benchmark import benchmark
 from migrations.subscription import subscription
-# from migrations.email import email
 
-def run_task(task):
+def run_task(task, name):
     try:
+        log.info(f"🚀 Task {name} started.")
         task()
+        log.info(f"✅ Task {name} completed.")
     except Exception as e:
-        log.error(f"❌ Task {task.__name__} failed: {e}")
+        log.error(f"❌ Task {name} failed: {e}")
         log.error(f"❌ Detailed error: {traceback.format_exc()}")
 
 def main():
@@ -17,18 +18,18 @@ def main():
     log.info(f"🚀 Process initiated, {benchmark_start}.")
     print(f"🚀 Process initiated, {benchmark_start}.")
 
-    # tasks = [subscription, email]  # List of tasks to run in parallel
-    tasks = [subscription]  # List of tasks to run in parallel
-    num_threads = len(tasks)
+    # Define multiple jobs to run in parallel
+    jobs = {
+        "Subscription Job": subscription,
+        "Email Job": subscription,
+        "Another Subscription": subscription,
+    }
 
     try:
-        with ThreadPoolExecutor(max_workers=num_threads) as executor:
-            futures = {executor.submit(run_task, task): task.__name__ for task in tasks}
-            for future in as_completed(futures):
-                try:
-                    future.result()
-                except Exception as e:
-                    log.error(f"❌ Exception in {futures[future]} execution: {e}")
+        with ThreadPoolExecutor(max_workers=len(jobs)) as executor:
+            futures = {executor.submit(run_task, task, name): name for name, task in jobs.items()}
+            for future in futures:
+                future.result()  # Ensures all tasks run in parallel
     except Exception as e:
         log.error(f"❌ Something went wrong: {e}")
         log.error(f"❌ Detailed error: {traceback.format_exc()}")
