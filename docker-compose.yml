@@ -13,7 +13,7 @@ services:
             - ./app:/app
             - ./data/samples/:/data
         ports:
-            - 8980:5000
+            - 6780:5000
         networks:
             - migration
 
@@ -25,7 +25,7 @@ services:
         volumes:
             - ./web/:/var/www/html
         ports:
-            - "8981:80"
+            - "6781:80"
         networks:
             - migration
         depends_on:
@@ -51,7 +51,7 @@ services:
             - ./data/temp:/dumbs
             - ./docker/mysql.cnf:/etc/mysql/my.cnf
         ports:
-            - "8982:3306"
+            - "6782:3306"
         networks:
             - migration
       
