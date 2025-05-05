@@ -2,6 +2,7 @@
 app/.env
 # ignore __pycache__ directories and .pyc files
 __pycache__/
+.vscode/
 *.pyc
 # data directory
 data/*
