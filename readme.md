@@ -1,4 +1,4 @@
-# Migrating Between MSSQL and MySQL Databases Using Python and Docker
+# Migrating Between MSSQL / ORACLE and MySQL Databases Using Python and Docker
 
 This guide provides step-by-step instructions to set up and run the database migration project using Docker.
 
@@ -73,6 +73,7 @@ app/
 │   ├── migrate.py
 │   ├── mysql.py
 │   ├── mssql.py
+│   ├── oracle.py
 │── main.py
 │── test.py 
 ```
@@ -206,8 +207,8 @@ docker-compose up -d
 Before running the migration, you need to configure the database connection settings in your `.env` file. Below are the required environment variables:
 
 ```
-SOURCE_DATABASE=MSSQL           # MSSQL / MYSQL
-DESTINATION_DATABASE=MYSQL      # MYSQL / MSSQL
+SOURCE_DATABASE=MSSQL           # MSSQL / MYSQL / ORACLE
+DESTINATION_DATABASE=MYSQL      # MYSQL / MSSQL / ORACLE
 QUERY_CHUNK_SIZE=1000
 
 # MySQL Database Configuration
@@ -227,6 +228,14 @@ MSSQL_DATABASE=null
 MSSQL_UID=null
 MSSQL_PWD=null
 MSSQL_ENCRYPT=yes
+
+# ORACLE Database Configuration
+# --------------------------------------- 
+ORACLE_HOST=null
+ORACLE_PORT=1521 
+ORACLE_USER=null
+ORACLE_PASSWORD=null
+ORACLE_SID=null
 ```
 
 Make sure to replace the placeholder values (`null`) with your actual database configurations. This will ensure that your migration process can connect to the appropriate databases.

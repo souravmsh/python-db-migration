@@ -1,5 +1,6 @@
 from utils.mysql import mysql_connect
 from utils.mssql import mssql_connect
+from utils.oracle import oracle_connect
 
 def test_mysql():
     print('MySQL connection testing...')
@@ -21,3 +22,13 @@ def test_mssql():
         conn.close()  # Make sure to close the connection after use.
     else:
         print("Failed MSSQL connection.")
+
+def test_oracle():
+    print('ORACLE connection testing...')
+    conn = oracle_connect()
+    if conn:
+        print("connected...")
+        print(conn)
+        conn.close()  # Make sure to close the connection after use.
+    else:
+        print("Failed ORACLE connection.")

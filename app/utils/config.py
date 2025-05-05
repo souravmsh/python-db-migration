@@ -17,6 +17,7 @@ class Config:
         'password': os.getenv('MYSQL_PASSWORD', ''),
         'database': os.getenv('MYSQL_DATABASE', ''),
     }
+
     mssql = {
         'DRIVER': os.getenv('MSSQL_DRIVER', '{ODBC Driver 17 for SQL Server}'),
         'SERVER': os.getenv('MSSQL_SERVER', 'localhost'),
@@ -25,6 +26,14 @@ class Config:
         'UID': os.getenv('MSSQL_UID', 'sa'),
         'PWD': os.getenv('MSSQL_PWD', ''),
         'ENCRYPT': os.getenv('MSSQL_ENCRYPT', 'no'),
+    }
+
+    oracle = { 
+        'host': os.getenv('ORACLE_HOST', 'localhost'),
+        'port': os.getenv('ORACLE_PORT', '1521'), 
+        'user': os.getenv('ORACLE_USER', ''),
+        'password': os.getenv('ORACLE_PASSWORD', ''),
+        'sid': os.getenv('ORACLE_SID', ''),
     }
 
 # Create an instance of the Config class

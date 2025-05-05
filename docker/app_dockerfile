@@ -10,32 +10,48 @@ COPY ./ /app
 # Copy the requirements file separately to leverage Docker caching
 COPY ./docker/requirements.txt requirements.txt
 
-# Install required system dependencies for Microsoft ODBC and MySQL client
+# Install system dependencies for MySQL, MSSQL, and Oracle clients
 RUN apt-get update && \
-    apt-get install --no-install-recommends --yes\
+    apt-get install --no-install-recommends --yes \
     unixodbc \
     unixodbc-dev \
     curl \
     libodbc1 \
     odbcinst \
-    default-mysql-client \ 
+    default-mysql-client \
     apt-utils \
-    gnupg2 &&\
-    rm -rf /var/lib/apt/lists/* && \
-    pip install --upgrade pip
+    gnupg2 \
+    g++ \
+    build-essential \
+    python3-dev \
+    libssl-dev \
+    libaio1 \
+    libssl3 \
+    pkg-config \
+    unzip && \
+    rm -rf /var/lib/apt/lists/*
 
-# Download and install msodbcsql18 .deb package 
-RUN apt-get update
-RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
-RUN curl https://packages.microsoft.com/config/debian/11/prod.list > /etc/apt/sources.list.d/mssql-release.list 
-    
-RUN exit
-RUN apt-get update
-RUN env ACCEPT_EULA=Y apt-get install -y msodbcsql18 
+# Add MSSQL driver repository and install msodbcsql18
+RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
+    curl https://packages.microsoft.com/config/debian/11/prod.list > /etc/apt/sources.list.d/mssql-release.list && \
+    apt-get update && \
+    ACCEPT_EULA=Y apt-get install -y --no-install-recommends msodbcsql18 && \
+    rm -rf /var/lib/apt/lists/*
 
-COPY ./docker/odbc.ini / 
-RUN odbcinst -i -s -f /odbc.ini -l
-RUN cat /etc/odbc.ini
+# Oracle Instant Client setup
+ENV ORACLE_HOME=/opt/oracle/instantclient_21_1 \
+    LD_LIBRARY_PATH=/opt/oracle/instantclient_21_1 \
+    PATH=/opt/oracle/instantclient_21_1:$PATH
+COPY ./data/oracle/instantclient-basic-linux.x64-21.1.zip /tmp/instantclient-basic.zip
+RUN mkdir -p /opt/oracle && \
+    unzip /tmp/instantclient-basic.zip -d /opt/oracle && \
+    rm /tmp/instantclient-basic.zip && \
+    echo "$ORACLE_HOME" > /etc/ld.so.conf.d/oracle-instantclient.conf && \
+    ldconfig
+
+# Optional: ODBC setup
+COPY ./docker/odbc.ini /etc/odbc.ini
+RUN odbcinst -i -s -f /etc/odbc.ini -l && cat /etc/odbc.ini
 
 # Install required Python packages
 RUN pip install --no-cache-dir -r requirements.txt
@@ -45,4 +61,3 @@ ENV PYTHONPATH=/app
 
 # Command to run migration script (if needed)
 # CMD ["python", "app/main.py"]
-

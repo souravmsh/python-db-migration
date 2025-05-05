@@ -6,6 +6,7 @@ __pycache__/
 # data directory
 data/*
 !data/odbc/
+!data/oracle/
 !data/samples/
 # logs
 logs/*

@@ -1,5 +1,6 @@
 from utils.mysql import mysql_connect
 from utils.mssql import mssql_connect
+from utils.oracle import oracle_connect
 from utils.config import config
 from utils.log import log
 
@@ -8,27 +9,35 @@ class Migrator:
     def __init__(self):
         self.total_fetched = 0
         self.total_inserted = 0
-        
+
         try:
-            # Automatically decide source and destination DB from config/env
-            self.source_conn = mssql_connect() if config.source_database == "MSSQL" else mysql_connect()
-            self.dest_conn = mysql_connect() if config.destination_database == "MYSQL" else mssql_connect()
-            
-            # Configure cursors to return dictionaries
+            # Connect to source database
             if config.source_database == "MSSQL":
+                self.source_conn = mssql_connect()
                 self.source_cursor = self.source_conn.cursor()
-            else:
+            elif config.source_database == "ORACLE":
+                self.source_conn = oracle_connect()
+                self.source_cursor = self.source_conn.cursor()
+            else:  # Assume MySQL as fallback
+                self.source_conn = mysql_connect()
                 self.source_cursor = self.source_conn.cursor(dictionary=True)
-                
-            if config.destination_database == "MYSQL":
-                self.dest_cursor = self.dest_conn.cursor(dictionary=True)
-            else:
+
+            # Connect to destination database
+            if config.destination_database == "MSSQL":
+                self.dest_conn = mssql_connect()
                 self.dest_cursor = self.dest_conn.cursor()
+            elif config.destination_database == "ORACLE":
+                self.dest_conn = oracle_connect()
+                self.dest_cursor = self.dest_conn.cursor()
+            else:  # Assume MySQL as fallback
+                self.dest_conn = mysql_connect()
+                self.dest_cursor = self.dest_conn.cursor(dictionary=True)
 
         except Exception as e:
             log.error(f"❌ Error initializing connections: {e}")
             print(f"❌ Error initializing connections: {e}")
             raise
+
 
     def truncate(self, table_name=None):
         """Truncate the specified table in destination database"""
