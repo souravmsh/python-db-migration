@@ -35,4 +35,18 @@ CREATE TABLE `subscriptions_temp` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-
+DROP TABLE IF EXISTS `clients`;
+CREATE TABLE `clients` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(64) NOT NULL,
+  `client_code` varchar(20) NOT NULL,
+  `boid` varchar(20) NOT NULL,
+  `mobile` varchar(16) DEFAULT NULL,
+  `email` varchar(64) DEFAULT NULL,
+  `bank_name` varchar(64) DEFAULT NULL,
+  `bank_account` varchar(30) DEFAULT NULL,
+  `status` enum('Active','Inactive') NOT NULL DEFAULT 'Active',
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+);
