@@ -1,4 +1,4 @@
-# Migrating Between MSSQL / ORACLE and MySQL Databases Using Python and Docker
+# Migrating Between MSSQL, Oracle and MySQL Databases Using Python and Docker
 
 This guide provides step-by-step instructions to set up and run the database migration project using Docker.
 
