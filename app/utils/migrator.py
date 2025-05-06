@@ -57,58 +57,100 @@ class Migrator:
             raise
 
     def count_rows(self, query):
-        """Count total rows for the given query in source database"""
         try:
-            count_query = f"SELECT COUNT(*) FROM ({query}) AS count_table"
+            if config.source_database == "MSSQL":
+                count_query = f"SELECT COUNT(*) FROM ({query}) AS count_table"
+            else:  # Oracle, MySQL
+                count_query = f"SELECT COUNT(*) FROM ({query}) count_table"
             self.source_cursor.execute(count_query)
             result = self.source_cursor.fetchone()
-            total_rows = result[0] if config.source_database == "MSSQL" else result['COUNT(*)']
+            total_rows = result[0]
             log.info(f"✅ Total rows in source query: {total_rows}")
             print(f"✅ Total rows in source query: {total_rows}")
             return total_rows
+
         except Exception as e:
             log.error(f"❌ Error counting rows of source query: {e}")
             print(f"❌ Error counting rows of source query: {e}")
             raise
 
+
     def fetch_data_chunk(self, query, offset, chunk_size):
         """Fetch a chunk of data from source database"""
         try:
-            if config.source_database == "MSSQL":
+            db_type = config.source_database.upper()
+
+            if db_type == "MSSQL":
                 if "ORDER BY" not in query.upper():
                     query += " ORDER BY (SELECT NULL)"
                 query_with_limit = f"{query} OFFSET {offset} ROWS FETCH NEXT {chunk_size} ROWS ONLY"
                 self.source_cursor.execute(query_with_limit)
                 columns = [column[0] for column in self.source_cursor.description]
                 rows = [dict(zip(columns, row)) for row in self.source_cursor.fetchall()]
-            else:  # MySQL
+
+            elif db_type == "MYSQL":
                 query_with_limit = f"{query} LIMIT {chunk_size} OFFSET {offset}"
                 self.source_cursor.execute(query_with_limit)
-                rows = self.source_cursor.fetchall()  # Already dictionaries due to cursor config
-                
+                columns = [column[0] for column in self.source_cursor.description]
+                rows = [dict(zip(columns, row)) for row in self.source_cursor.fetchall()]
+
+            elif db_type == "ORACLE":
+                query_with_limit = f"""
+                    SELECT * FROM (
+                        SELECT a.*, ROWNUM rnum FROM (
+                            {query}
+                        ) a
+                        WHERE ROWNUM <= {offset + chunk_size}
+                    )
+                    WHERE rnum > {offset}
+                """
+                self.source_cursor.execute(query_with_limit)
+                columns = [col[0] for col in self.source_cursor.description]
+                rows = [dict(zip(columns, row)) for row in self.source_cursor.fetchall()]
+
+            else:
+                raise ValueError(f"Unsupported database type: {db_type}")
+
             # log.debug(f"✅ Fetched {len(rows)} rows with query: {query_with_limit}")
             return rows
+
         except Exception as e:
             log.error(f"❌ Error fetching data chunk: {e}")
             raise
+
 
     def insert_data(self, mapped_rows, destination_table):
         """Insert mapped rows into destination table"""
         try:
             if not mapped_rows:
                 return
-                
+
+            db_type = config.destination_database.upper()
             columns = list(mapped_rows[0].keys())
-            placeholders = ','.join(['%s'] * len(columns))
-            query = f"INSERT INTO {destination_table} ({','.join(columns)}) VALUES ({placeholders})"
-            
-            self.dest_cursor.executemany(query, [tuple(row.values()) for row in mapped_rows])
+            column_list = ', '.join(columns)
+
+            # Determine placeholder style
+            if db_type == "MYSQL":
+                placeholders = ','.join(['%s'] * len(columns))
+            elif db_type == "MSSQL":
+                placeholders = ','.join(['?'] * len(columns))
+            elif db_type == "ORACLE":
+                placeholders = ','.join([f':{i+1}' for i in range(len(columns))])
+            else:
+                raise ValueError(f"Unsupported destination database type: {db_type}")
+
+            query = f"INSERT INTO {destination_table} ({column_list}) VALUES ({placeholders})"
+
+            values = [tuple(row.values()) for row in mapped_rows]
+            self.dest_cursor.executemany(query, values)
             self.dest_conn.commit()
-            
+
             # log.debug(f"✅ Inserted {len(mapped_rows)} rows into {destination_table}")
+
         except Exception as e:
             log.error(f"❌ Error inserting data: {e}")
             raise
+
 
     def migrate(self, source_table, source_query, destination_table, prepare_data_func, chunk_size):
         """Perform the migration process"""
