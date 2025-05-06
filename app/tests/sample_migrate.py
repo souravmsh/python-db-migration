@@ -18,7 +18,7 @@ def prepare_data(row):
         'updated_at': row['updated_at']
     }
 
-def main(): 
+def sample_migrate(): 
     # Initialize the migration service
     migrator = Migrator()
     # Truncate the destination table before inserting new data
@@ -33,4 +33,4 @@ def main():
     )
 
 if __name__ == "__main__":
-    main()
+    sample_migrate()

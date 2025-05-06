@@ -112,7 +112,7 @@ CREATE TABLE `clients` (
 );
 """
 
-def main():
+def schema():
     connection = mysql_connect()
     if connection:
         create_schema(connection, schema)
@@ -120,4 +120,4 @@ def main():
         connection.close()
 
 if __name__ == "__main__":
-    main()
+    schema()

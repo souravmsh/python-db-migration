@@ -25,7 +25,7 @@ def prepare_data(row):
         'updated_at': row['CDBL_SETUPDT'] or current_dt,
     }
 
-def main(): 
+def client(): 
     # Initialize the migration service
     migrator = Migrator()
     # Truncate the destination table before inserting new data
@@ -40,4 +40,4 @@ def main():
     )
 
 if __name__ == "__main__":
-    main()
+    client()
