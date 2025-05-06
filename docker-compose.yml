@@ -55,11 +55,25 @@ services:
         networks:
             - migration
       
+    phpmyadmin:
+        container_name: 'migration-phpmyadmin'
+        image: phpmyadmin/phpmyadmin
+        links:
+            - db
+        ports:
+            - "6783:80"
+        environment:
+            MYSQL_ROOT_PASSWORD: 'root'
+            MYSQL_USER: 'root'
+            PMA_ARBITRARY: 1
+        networks:
+            - migration
+        depends_on:
+            - db
 
 networks:
     migration:
         driver: bridge
-
 volumes:
     data:
         driver: local
