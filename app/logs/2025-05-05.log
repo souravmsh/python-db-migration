@@ -1,4 +1,0 @@
-2025-05-05 08:41:16,979,47 ERROR - ❌ Error initializing connections: <class 'pyodbc.Error'> returned a result with an exception set - [migrator.py:37 - __init__()]
-2025-05-05 08:41:34,940,49 ERROR - ❌ Error initializing connections: 'NoneType' object has no attribute 'cursor' - [migrator.py:37 - __init__()]
-2025-05-05 08:44:07,297,54 ERROR - ❌ Error initializing connections: <class 'pyodbc.Error'> returned a result with an exception set - [migrator.py:37 - __init__()]
-2025-05-05 08:48:19,126,55 ERROR - ❌ Error initializing connections: <class 'pyodbc.Error'> returned a result with an exception set - [migrator.py:37 - __init__()]
