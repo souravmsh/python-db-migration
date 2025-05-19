@@ -38,7 +38,6 @@ class Migrator:
             print(f"❌ Error initializing connections: {e}")
             raise
 
-
     def truncate(self, table_name=None):
         """Truncate the specified table in destination database"""
         try:
@@ -73,7 +72,6 @@ class Migrator:
             log.error(f"❌ Error counting rows of source query: {e}")
             print(f"❌ Error counting rows of source query: {e}")
             raise
-
 
     def fetch_data_chunk(self, query, offset, chunk_size):
         """Fetch a chunk of data from source database"""
@@ -118,7 +116,6 @@ class Migrator:
             log.error(f"❌ Error fetching data chunk: {e}")
             raise
 
-
     def insert_data(self, mapped_rows, destination_table):
         """Insert mapped rows into destination table"""
         try:
@@ -150,7 +147,6 @@ class Migrator:
         except Exception as e:
             log.error(f"❌ Error inserting data: {e}")
             raise
-
 
     def migrate(self, source_table, source_query, destination_table, prepare_data_func, chunk_size):
         """Perform the migration process"""

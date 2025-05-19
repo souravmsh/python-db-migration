@@ -94,6 +94,23 @@ CREATE TABLE `clients` (
   `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+DROP TABLE IF EXISTS `trading_work_stations`;
+CREATE TABLE trading_work_stations (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    terminal_name VARCHAR(100) NOT NULL,
+    branch_id VARCHAR(50) NOT NULL,
+    branch_name VARCHAR(100) NULL,
+    exchange_id VARCHAR(20) NOT NULL,
+    trader_name VARCHAR(100) NOT NULL,
+    status VARCHAR(20) DEFAULT 'Active',
+    created_at DATETIME NULL,
+    updated_at DATETIME NULL,
+    ref_no VARCHAR(100) NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
 """
 
 def schema():

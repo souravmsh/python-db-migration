@@ -10,5 +10,5 @@ data/*
 !data/oracle/
 !data/samples/
 # logs
-logs/*
-!logs/index.html
+app/logs/*
+!app/logs/index.html

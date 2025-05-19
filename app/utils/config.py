@@ -8,7 +8,8 @@ class Config:
 
     source_database = os.getenv("SOURCE_DATABASE", "MSSQL")
     destination_database = os.getenv("DESTINATION_DATABASE", "MYSQL")
-    query_chunk_size = int(os.getenv("query_chunk_size", 1000))
+    query_chunk_size = int(os.getenv("QUERY_CHUNK_SIZE", 1000))
+    reference_id = os.getenv("REFERENCE_ID", "MIGAPP01")
 
     mysql = {
         'host': os.getenv('MYSQL_HOST', 'localhost'),
