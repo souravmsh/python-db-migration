@@ -57,20 +57,25 @@ class Migrator:
 
     def count_rows(self, query):
         try:
-            if config.source_database == "MSSQL":
+            if config.source_database == "MSSQL" or config.source_database == "MYSQL":
                 count_query = f"SELECT COUNT(*) FROM ({query}) AS count_table"
-            else:  # Oracle, MySQL
+            else:  # Oracle
                 count_query = f"SELECT COUNT(*) FROM ({query}) count_table"
             self.source_cursor.execute(count_query)
             result = self.source_cursor.fetchone()
-            total_rows = result[0]
+            
+            if config.source_database == "MYSQL":
+                total_rows = result['COUNT(*)']  # or whatever the actual key is
+            else:
+                total_rows = result[0]
             log.info(f"Total rows in source query: {total_rows}")
-            print(f"Total rows in source query: {total_rows}")
+            print(f"Total rows in source query: {total_rows} - {count_query}")
+
             return total_rows
 
         except Exception as e:
             log.error(f"Error counting rows of source query: {e}")
-            print(f"Error counting rows of source query: {e}")
+            print(f"Error counting rows of source query: {e} - {count_query}")
             raise
 
     def fetch_data_chunk(self, query, offset, chunk_size):
@@ -89,8 +94,7 @@ class Migrator:
             elif db_type == "MYSQL":
                 query_with_limit = f"{query} LIMIT {chunk_size} OFFSET {offset}"
                 self.source_cursor.execute(query_with_limit)
-                columns = [column[0] for column in self.source_cursor.description]
-                rows = [dict(zip(columns, row)) for row in self.source_cursor.fetchall()]
+                rows  = self.source_cursor.fetchall() 
 
             elif db_type == "ORACLE":
                 query_with_limit = f"""
@@ -151,9 +155,8 @@ class Migrator:
     def migrate(self, source_table, source_query, destination_table, prepare_data_func, chunk_size):
         """Perform the migration process"""
         try:
-
             self.source_table = source_table
-            self.source_query = source_query
+            self.source_query = source_query.strip().rstrip(';')
             self.destination_table = destination_table
             self.prepare_data_func = prepare_data_func
             self.query_chunk_size = chunk_size if chunk_size is not None else config.query_chunk_size
