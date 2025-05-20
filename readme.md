@@ -95,17 +95,17 @@ from migrations.subscription import subscription
 
 def run_task(task, name):
     try:
-        log.info(f"🚀 Task {name} started.")
+        log.info(f"Task {name} started.")
         task()
-        log.info(f"✅ Task {name} completed.")
+        log.info(f"Task {name} completed.")
     except Exception as e:
-        log.error(f"❌ Task {name} failed: {e}")
-        log.error(f"❌ Detailed error: {traceback.format_exc()}")
+        log.error(f"Task {name} failed: {e}")
+        log.error(f"Detailed error: {traceback.format_exc()}")
 
 def main():
     benchmark_start = benchmark.start(1)
-    log.info(f"🚀 Process initiated, {benchmark_start}.")
-    print(f"🚀 Process initiated, {benchmark_start}.")
+    log.info(f"Process initiated, {benchmark_start}.")
+    print(f"Process initiated, {benchmark_start}.")
 
     # Define multiple jobs to run in parallel
     jobs = {
@@ -120,12 +120,12 @@ def main():
             for future in futures:
                 future.result()  # Ensures all tasks run in parallel
     except Exception as e:
-        log.error(f"❌ Something went wrong: {e}")
-        log.error(f"❌ Detailed error: {traceback.format_exc()}")
+        log.error(f"Something went wrong: {e}")
+        log.error(f"Detailed error: {traceback.format_exc()}")
 
     benchmark_end = benchmark.end(1)
-    print(f"✅ Process completed {benchmark_end}.\n" + ("_" * 80))
-    log.info(f"✅ Process completed {benchmark_end}.\n" + ("_" * 80))
+    print(f"Process completed {benchmark_end}.\n" + ("_" * 80))
+    log.info(f"Process completed {benchmark_end}.\n" + ("_" * 80))
 
 if __name__ == "__main__":
     main()
@@ -255,4 +255,4 @@ docker exec -it migration-app sh migrations/subscription.py
 ---
 
 ## **Conclusion**
-You have now successfully set up and run the database migration project inside a Docker container. 🚀 Let me know if you need further assistance! 😊
+You have now successfully set up and run the database migration project inside a Docker container. Let me know if you need further assistance! 😊
