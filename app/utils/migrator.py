@@ -34,8 +34,8 @@ class Migrator:
                 self.dest_cursor = self.dest_conn.cursor(dictionary=True)
 
         except Exception as e:
-            log.error(f"❌ Error initializing connections: {e}")
-            print(f"❌ Error initializing connections: {e}")
+            log.error(f"Error initializing connections: {e}")
+            print(f"Error initializing connections: {e}")
             raise
 
     def truncate(self, table_name=None):
@@ -48,11 +48,11 @@ class Migrator:
             query = f"TRUNCATE TABLE {target_table}"
             self.dest_cursor.execute(query)
             self.dest_conn.commit()
-            log.info(f"✅ Truncated table {target_table}")
-            print(f"✅ Truncated table {target_table}")
+            log.info(f"Truncated table {target_table}")
+            print(f"Truncated table {target_table}")
         except Exception as e:
-            log.error(f"❌ Error truncating {target_table}: {e}")
-            print(f"❌ Error truncating {target_table}: {e}")
+            log.error(f"Error truncating {target_table}: {e}")
+            print(f"Error truncating {target_table}: {e}")
             raise
 
     def count_rows(self, query):
@@ -64,13 +64,13 @@ class Migrator:
             self.source_cursor.execute(count_query)
             result = self.source_cursor.fetchone()
             total_rows = result[0]
-            log.info(f"✅ Total rows in source query: {total_rows}")
-            print(f"✅ Total rows in source query: {total_rows}")
+            log.info(f"Total rows in source query: {total_rows}")
+            print(f"Total rows in source query: {total_rows}")
             return total_rows
 
         except Exception as e:
-            log.error(f"❌ Error counting rows of source query: {e}")
-            print(f"❌ Error counting rows of source query: {e}")
+            log.error(f"Error counting rows of source query: {e}")
+            print(f"Error counting rows of source query: {e}")
             raise
 
     def fetch_data_chunk(self, query, offset, chunk_size):
@@ -109,11 +109,11 @@ class Migrator:
             else:
                 raise ValueError(f"Unsupported database type: {db_type}")
 
-            # log.debug(f"✅ Fetched {len(rows)} rows with query: {query_with_limit}")
+            # log.debug(f"Fetched {len(rows)} rows with query: {query_with_limit}")
             return rows
 
         except Exception as e:
-            log.error(f"❌ Error fetching data chunk: {e}")
+            log.error(f"Error fetching data chunk: {e}")
             raise
 
     def insert_data(self, mapped_rows, destination_table):
@@ -142,10 +142,10 @@ class Migrator:
             self.dest_cursor.executemany(query, values)
             self.dest_conn.commit()
 
-            # log.debug(f"✅ Inserted {len(mapped_rows)} rows into {destination_table}")
+            # log.debug(f"Inserted {len(mapped_rows)} rows into {destination_table}")
 
         except Exception as e:
-            log.error(f"❌ Error inserting data: {e}")
+            log.error(f"Error inserting data: {e}")
             raise
 
     def migrate(self, source_table, source_query, destination_table, prepare_data_func, chunk_size):
@@ -158,10 +158,10 @@ class Migrator:
             self.prepare_data_func = prepare_data_func
             self.query_chunk_size = chunk_size if chunk_size is not None else config.query_chunk_size
 
-            log.info(f"✅ Initialized connection: {config.source_database} → {config.destination_database}, {self.source_table} → {self.destination_table}.")
-            print(f"✅ Initialized connection: {config.source_database} → {config.destination_database}, {self.source_table} → {self.destination_table}.")
-            print(f"✅ Query Chunk Size: {chunk_size}")
-            print(f"✅ Running source query: {source_query}")
+            log.info(f"Initialized connection: {config.source_database} → {config.destination_database}, {self.source_table} → {self.destination_table}.")
+            print(f"Initialized connection: {config.source_database} → {config.destination_database}, {self.source_table} → {self.destination_table}.")
+            print(f"Query Chunk Size: {chunk_size}")
+            print(f"Running source query: {source_query}")
             
             # count total rows from source_query
             self.count_rows(source_query)
@@ -184,27 +184,27 @@ class Migrator:
                 self.total_inserted += inserted_count
                 sl = sl + 1
 
-                progress_msg = (f"✅ Progress [{sl}][{offset} ➝ {self.total_fetched}][{len(rows)}][{self.source_table}({self.total_fetched}) ➝ {self.destination_table}({self.total_inserted})]")
+                progress_msg = (f"Progress [{sl}][{offset} ➝ {self.total_fetched}][{len(rows)}][{self.source_table}({self.total_fetched}) ➝ {self.destination_table}({self.total_inserted})]")
 
                 print(progress_msg)
                 log.info(progress_msg)
 
                 offset += chunk_size
 
-            final_msg = (f"✅ Migration Done - Total fetched: {self.total_fetched}, Total inserted: {self.total_inserted}")
+            final_msg = (f"Migration Done - Total fetched: {self.total_fetched}, Total inserted: {self.total_inserted}")
             
             print(final_msg)
             log.info(final_msg)
         
 
         except Exception as e:
-            log.error(f"❌ Migration failed: {e}")
-            print(f"❌ Migration failed: {e}")
+            log.error(f"Migration failed: {e}")
+            print(f"Migration failed: {e}")
             raise
         finally:
             self.source_cursor.close()
             self.dest_cursor.close()
             self.source_conn.close()
             self.dest_conn.close()
-            log.info("✅ Closed database connections")
-            print("✅ Closed database connections")
+            log.info("Closed database connections")
+            print("Closed database connections")

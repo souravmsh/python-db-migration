@@ -10,9 +10,9 @@ def create_schema(connection, schema_sql):
             if statement.strip():
                 cursor.execute(statement)
         connection.commit()
-        print("✅ Database schema created successfully!")
+        print("Database schema created successfully!")
     except Error as e:
-        print(f"❌ Error creating schema: {e}")
+        print(f"Error creating schema: {e}")
     finally:
         cursor.close()
 
@@ -38,9 +38,9 @@ def insert_fake_data(connection):
         cursor.executemany(insert_temp_query, data)
 
         connection.commit()
-        print("✅ 1000 fake records inserted successfully into subscriptions and subscriptions_temp!")
+        print("1000 fake records inserted successfully into subscriptions and subscriptions_temp!")
     except Error as e:
-        print(f"❌ Error inserting fake data: {e}")
+        print(f"Error inserting fake data: {e}")
     finally:
         cursor.close()
 
